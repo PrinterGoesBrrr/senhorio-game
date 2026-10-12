@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  senhorio-app:
+    build: .
+    container_name: senhorio-game
+    restart: unless-stopped
+    networks:
+      - tunnel_net # Permite ligar ao túnel da Cloudflare
+
+networks:
+  tunnel_net:
+    external: true

@@ -1,4 +1,10 @@
-// Senhorio — definições das cartas (baseado no baralho do Monopoly Deal, 106 cartas)
+// Senhorio — cartas e regras partilhadas (baseado no baralho do Monopoly Deal, 106 cartas)
+// Este ficheiro corre no servidor (require) e no browser (<script>): o servidor
+// usa-o para validar e jogar, o cliente para desenhar a mesa e as opções.
+
+(function (root) {
+'use strict';
+
 
 const COLORS = {
   brown:     { name: 'Periferia',        hex: '#7b4a2a', text: '#fff', size: 2, rent: [1, 2] },
@@ -152,3 +158,65 @@ function buildDeck() {
   }
   return deck;
 }
+
+const sum = (cards) => cards.reduce((s, c) => s + c.value, 0);
+const isPropertyCard = (c) => c.type === 'property' || c.type === 'wild';
+const colorsOf = (c) => (c.type === 'property' ? [c.color] : c.colors);
+
+// Os montes de propriedades são derivados: as cartas de cada cor são agrupadas em
+// conjuntos do tamanho da cor, e as remodelações ligam-se aos conjuntos completos.
+function getPiles(p) {
+  const piles = [];
+  for (const color of COLOR_KEYS) {
+    const cards = p.props.filter((c) => c.curColor === color);
+    if (!cards.length) continue;
+    const size = COLORS[color].size;
+    const colorPiles = [];
+    for (let i = 0; i < cards.length; i += size) {
+      const chunk = cards.slice(i, i + size);
+      colorPiles.push({ color, cards: chunk, complete: chunk.length === size && chunk.some((c) => !c.multi), house: null, hotel: null });
+    }
+    const houses = p.improvements.filter((c) => c.curColor === color && c.action === 'house');
+    const hotels = p.improvements.filter((c) => c.curColor === color && c.action === 'hotel');
+    for (const pile of colorPiles) {
+      if (!pile.complete || NO_BUILD.includes(color)) continue;
+      if (houses.length) pile.house = houses.shift();
+      if (pile.house && hotels.length) pile.hotel = hotels.shift();
+    }
+    piles.push(...colorPiles);
+  }
+  return piles;
+}
+
+function pileRent(pile) {
+  const c = COLORS[pile.color];
+  return c.rent[Math.min(pile.cards.length, c.size) - 1] + (pile.house ? 3 : 0) + (pile.hotel ? 4 : 0);
+}
+
+function rentFor(p, color) {
+  return Math.max(0, ...getPiles(p).filter((x) => x.color === color).map(pileRent));
+}
+
+const completeColors = (p) => new Set(getPiles(p).filter((x) => x.complete).map((x) => x.color));
+const bankTotal = (p) => sum(p.bank);
+const payableItems = (p) => [...p.bank, ...p.props.filter((c) => c.value > 0), ...p.improvements];
+const assetsTotal = (p) => sum(payableItems(p));
+const stealableProps = (p) => getPiles(p).filter((x) => !x.complete).flatMap((x) => x.cards);
+
+function buildableColors(p, kind) {
+  const ok = (x) => x.complete && !NO_BUILD.includes(x.color) && (kind === 'house' ? !x.house : x.house && !x.hotel);
+  return [...new Set(getPiles(p).filter(ok).map((x) => x.color))];
+}
+
+function propLabel(card) {
+  return card.type === 'wild' ? `${card.name} (como ${COLORS[card.curColor].name})` : `${card.name} (${COLORS[card.color].name})`;
+}
+
+const api = {
+  COLORS, COLOR_KEYS, NO_BUILD, PROP_VALUE, ACTIONS, buildDeck,
+  sum, isPropertyCard, colorsOf, getPiles, pileRent, rentFor, completeColors,
+  bankTotal, payableItems, assetsTotal, stealableProps, buildableColors, propLabel,
+};
+if (typeof module === 'object' && module.exports) module.exports = api;
+else Object.assign(root, api);
+})(typeof window !== 'undefined' ? window : globalThis);

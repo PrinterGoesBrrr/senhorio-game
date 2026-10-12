@@ -1,4 +1,12 @@
-// Senhorio — adversários controlados pelo computador
+'use strict';
+
+// Senhorio — adversários controlados pelo computador. Jogam no servidor e só
+// usam o que um jogador veria: a própria mão e a mesa.
+
+const {
+  COLORS, PROP_VALUE, isPropertyCard, colorsOf, getPiles, pileRent, rentFor, completeColors,
+  bankTotal, assetsTotal, stealableProps, buildableColors,
+} = require('../public/rules');
 
 const BOTS = [
   { name: 'Fundo Abutre Lda.', avatar: '🦅' },
@@ -54,14 +62,14 @@ const richest = (players) => [...players].sort((a, b) => assetsTotal(b) - assets
 
 const AIAgent = {
   async takeTurn(game, p) {
-    await sleep(700);
+    await game.sleep(700);
     this.optimizeWilds(game, p);
     while (game.playsLeft > 0 && !game.winner) {
       const move = this.pickMove(game, p);
       if (!move) break;
       await move();
       if (!game.winner) this.optimizeWilds(game, p);
-      await sleep(900);
+      await game.sleep(900);
     }
   },
 
@@ -213,3 +221,5 @@ const AIAgent = {
     return importance >= 4 || (importance >= 3 && Math.random() < 0.5);
   },
 };
+
+module.exports = { AIAgent, BOTS };

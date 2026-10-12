@@ -4,37 +4,50 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Senhorio — o jogo de cartas da crise da habitação</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🏚️%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <header class="topbar">
     <h1>🏚️ SENHORIO</h1>
     <span class="tagline">O jogo de cartas da crise da habitação</span>
+    <button id="room-chip" class="room-chip" title="Copiar o link da mesa" hidden>Mesa <b id="room-code">----</b></button>
+    <button id="restart-btn" class="btn ghost small" title="Voltar à sala de espera com os mesmos jogadores" hidden>Novo jogo</button>
+    <button id="leave-btn" class="btn ghost small danger" hidden>Sair da mesa</button>
     <button id="rules-btn" class="btn ghost small">Regras</button>
   </header>
 
-  <section id="setup" class="screen">
+  <section id="gate" class="screen">
     <div class="setup-box">
       <h2>Bem-vindo ao mercado imobiliário português!</h2>
       <p>
         Os preços estão ao rubro, os inquilinos estão aflitos e tu tens um sonho:
         <b>ser o maior senhorio do país</b>. Junta <b>3 conjuntos completos de cores diferentes</b>
-        antes dos teus adversários: um fundo abutre, uma tia com Alojamento Local e outros
+        antes dos teus adversários. Cria uma mesa e passa o código aos amigos, ou junta bots
         especialistas em "valorizar o património".
       </p>
       <label>O teu nome de senhorio
-        <input id="player-name" value="Senhorio Novato" maxlength="20">
+        <input id="name-input" maxlength="20" placeholder="Senhorio Novato" autocomplete="nickname">
       </label>
-      <label>Número de adversários
-        <select id="opp-count">
-          <option>1</option>
-          <option selected>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select>
-      </label>
-      <button id="start-btn" class="btn primary big">Começar a especular</button>
+      <div class="gate-actions">
+        <button id="create-btn" class="btn primary big">Criar mesa</button>
+        <div class="gate-divider">ou</div>
+        <div class="join-row">
+          <input id="room-input" maxlength="4" placeholder="ABCD" autocapitalize="characters" aria-label="Código da mesa">
+          <button id="join-btn" class="btn">Entrar na mesa</button>
+        </div>
+      </div>
+      <p id="gate-error" class="gate-error" hidden></p>
       <p class="fineprint">Qualquer semelhança com a realidade é pura coincidência. Infelizmente, não é.</p>
+    </div>
+  </section>
+
+  <section id="lobby" class="screen" hidden>
+    <div class="setup-box">
+      <h2>Sala de espera</h2>
+      <p>Passa o código <b id="lobby-code" class="code">----</b> aos outros jogadores, ou carrega no código lá em cima para copiar o link. Entre 2 e 5 senhorios.</p>
+      <div id="lobby-players" class="lobby-players"></div>
+      <div id="lobby-controls" class="options"></div>
     </div>
   </section>
 
@@ -110,10 +123,7 @@
   <div id="modal" class="overlay" hidden></div>
   <div id="toast" hidden></div>
 
-  <script src="js/cards.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/ai.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/main.js"></script>
+  <script src="rules.js?v=2"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+{
+  "name": "senhorio",
+  "version": "1.0.0",
+  "description": "Jogo de cartas multijogador da crise da habitação, para browser. Sem dependências: corre com node server.js.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {},
+  "license": "MIT",
+  "private": true
+}

@@ -12,6 +12,9 @@
 
 * { box-sizing: border-box; }
 
+/* `display: flex` nalguns ecrãs anula o atributo hidden — esta regra repõe-no. */
+[hidden] { display: none !important; }
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -31,6 +34,20 @@ body {
 }
 .topbar h1 { margin: 0; font-size: 24px; letter-spacing: 3px; color: var(--gold); }
 .tagline { color: var(--muted); font-style: italic; flex: 1; }
+.topbar { align-items: center; flex-wrap: wrap; }
+.room-chip {
+  font: inherit;
+  font-size: 13px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px dashed var(--gold);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.room-chip b { color: var(--gold); letter-spacing: 3px; font-size: 15px; margin-left: 4px; }
+.room-chip:hover { background: rgba(255, 255, 255, 0.16); }
+.btn.danger:hover:not(:disabled) { border-color: var(--accent); color: #ffb39c; }
 
 /* ---------- Botões ---------- */
 .btn {
@@ -71,6 +88,50 @@ body {
   border-radius: 6px;
   border: none;
 }
+
+.gate-actions { display: flex; flex-direction: column; gap: 10px; }
+.gate-divider { text-align: center; color: var(--muted); font-size: 13px; }
+.join-row { display: flex; gap: 8px; }
+.join-row input {
+  font: inherit;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-weight: 700;
+}
+.join-row .btn { text-align: center; }
+.gate-error { color: #ffb39c; font-weight: 600; }
+.code { color: var(--gold); letter-spacing: 3px; }
+
+.lobby-players { display: flex; flex-direction: column; gap: 6px; }
+.lobby-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+}
+.lobby-row small { color: var(--muted); }
+.lobby-row.offline, .opp.offline { opacity: 0.55; }
+.bot-remove {
+  margin-left: auto;
+  font: inherit;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.bot-remove:hover { color: var(--accent); border-color: var(--accent); }
+.opp-head .tag { color: var(--muted); font-size: 12px; }
+
 .fineprint { font-size: 12px; color: var(--muted); font-style: italic; text-align: center; }
 
 /* ---------- Mesa ---------- */
