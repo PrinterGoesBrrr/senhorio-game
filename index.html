@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Senhorio — o jogo de cartas da crise da habitação</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>🏚️ SENHORIO</h1>
+    <span class="tagline">O jogo de cartas da crise da habitação</span>
+    <button id="rules-btn" class="btn ghost small">Regras</button>
+  </header>
+
+  <section id="setup" class="screen">
+    <div class="setup-box">
+      <h2>Bem-vindo ao mercado imobiliário português!</h2>
+      <p>
+        Os preços estão ao rubro, os inquilinos estão aflitos e tu tens um sonho:
+        <b>ser o maior senhorio do país</b>. Junta <b>3 conjuntos completos de cores diferentes</b>
+        antes dos teus adversários: um fundo abutre, uma tia com Alojamento Local e outros
+        especialistas em "valorizar o património".
+      </p>
+      <label>O teu nome de senhorio
+        <input id="player-name" value="Senhorio Novato" maxlength="20">
+      </label>
+      <label>Número de adversários
+        <select id="opp-count">
+          <option>1</option>
+          <option selected>2</option>
+          <option>3</option>
+          <option>4</option>
+        </select>
+      </label>
+      <button id="start-btn" class="btn primary big">Começar a especular</button>
+      <p class="fineprint">Qualquer semelhança com a realidade é pura coincidência. Infelizmente, não é.</p>
+    </div>
+  </section>
+
+  <section id="game" class="screen" hidden>
+    <div id="opponents"></div>
+
+    <div id="center">
+      <div class="decks">
+        <div class="deck-slot">
+          <div class="card back"><span>SENHORIO</span></div>
+          <div id="deck-count"></div>
+        </div>
+        <div class="deck-slot">
+          <div id="discard-top"></div>
+          <div>Descarte</div>
+        </div>
+      </div>
+      <div id="status">
+        <div id="turn-info"></div>
+        <div id="plays"></div>
+        <button id="end-turn" class="btn primary">Terminar vez</button>
+        <div class="hint">Clica numa carta da mão para a jogar. Clica num curinga na mesa para mudar a cor.</div>
+      </div>
+      <div id="log"></div>
+    </div>
+
+    <div id="me">
+      <div id="me-head"></div>
+      <div class="me-row">
+        <div class="zone props-zone">
+          <h4>As tuas propriedades</h4>
+          <div id="my-props" class="piles"></div>
+        </div>
+        <div class="zone bank-zone">
+          <h4>Banco <span id="bank-total"></span></h4>
+          <div id="my-bank"></div>
+        </div>
+      </div>
+      <div class="zone">
+        <h4>A tua mão</h4>
+        <div id="my-hand"></div>
+      </div>
+    </div>
+  </section>
+
+  <template id="rules-tpl">
+    <div class="rules">
+      <h3>📜 Regras do Senhorio</h3>
+      <p><b>Objetivo:</b> ser o primeiro a ter <b>3 conjuntos completos de cores diferentes</b> na mesa.</p>
+      <ul>
+        <li>No início da vez compras <b>2 cartas</b> (ou 5 se tiveres a mão vazia).</li>
+        <li>Podes fazer até <b>3 jogadas</b> por vez: depositar dinheiro/ações no banco, jogar propriedades ou usar ações.</li>
+        <li>No fim da vez não podes ter mais de <b>7 cartas</b> na mão.</li>
+        <li>Quando pagas, escolhes cartas do <b>banco ou propriedades</b> da mesa. Nunca da mão. <b>Não há troco.</b></li>
+        <li>Propriedades nunca vão para o banco. Ações podem ir, como dinheiro.</li>
+        <li>Curingas podem mudar de cor durante a tua vez, sem gastar jogada.</li>
+        <li><b>Remodelação</b> (+3M€) e <b>Alojamento Local</b> (+4M€) só em conjuntos completos, exceto Transportes e Contadores.</li>
+      </ul>
+      <h4>Cartas de ação</h4>
+      <ul>
+        <li><b>🦅 Fundo Abutre</b>: rouba um conjunto completo.</li>
+        <li><b>🛂 Golden Visa</b>: fica com uma propriedade fora de conjunto completo.</li>
+        <li><b>🤝 Permuta Duvidosa</b>: troca uma propriedade tua por uma de outro jogador.</li>
+        <li><b>📨 Cobrador do Fraque</b>: um jogador paga-te 5M€.</li>
+        <li><b>🛗 Taxa de Condomínio</b>: todos te pagam 2M€.</li>
+        <li><b>👵 Herança da Avó</b>: compra 2 cartas.</li>
+        <li><b>📈 Atualização da Renda</b>: duplica uma Renda (conta como jogada).</li>
+        <li><b>⚖️ Providência Cautelar</b>: bloqueia uma ação contra ti, a qualquer momento. Pode ser contrariada por outra.</li>
+      </ul>
+    </div>
+  </template>
+
+  <div id="modal" class="overlay" hidden></div>
+  <div id="toast" hidden></div>
+
+  <script src="js/cards.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
